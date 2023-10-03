@@ -12,7 +12,7 @@ export default function EditProductPage(){
         if(!id){
             return;
         }
-        //Trả về data sản phẩm theo ID sản phẩm
+        //Lấy và trả data sản phẩm theo ID sản phẩm
         axios.get('/api/products?id='+id).then(response => {
             setProductInfo(response.data);
         });

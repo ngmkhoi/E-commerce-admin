@@ -1,9 +1,10 @@
 import axios from "axios";
 import {useRouter } from "next/router";
 import { useState } from "react";
+import Spinner from "./Spinner";
+import { ReactSortable } from "react-sortablejs";
 
 export default function ProductForm({
-    //truyền các tham số vào function
     _id,
     title:existingTitle,
     description:existingDescription,
@@ -15,6 +16,7 @@ export default function ProductForm({
     const [price, setPrice] = useState(existingPrice || '');
     const [images, setImages] = useState(existingImages || []);
     const [goToProducts, setGoToProducts] = useState(false);
+    const [isUploading, setIsUploading] = useState(false);
     const router = useRouter();
     async function saveProduct(ev) {
         ev.preventDefault();
@@ -33,22 +35,27 @@ export default function ProductForm({
       if (goToProducts) {
         router.push('/products');
       }
-      //Function up ảnh sp
+      //Post ảnh sp
       async function uploadImages(ev) {
         const files = ev.target?.files;
         if(files?.length > 0){
+          setIsUploading(true);
           const data = new FormData();
           for(const file of files){
             data.append('file', file);
           }
           const res = await axios.post('/api/upload', data);
-          //tạo mảng mới gồm ảnh cũ và mới
           setImages(oldImages => {
             return [...oldImages, ...res.data.links];
           });
-          console.log(res.data);
+          setIsUploading(false);
         }
       }
+
+      function updateImagesOrder(images){
+        setImages(images);
+      }
+
     return(
             <form onSubmit={saveProduct}>
               {/* Nhập tên sản phẩm */}
@@ -61,12 +68,22 @@ export default function ProductForm({
             <label>
               Ảnh sản phẩm
             </label>
-            <div className="mb-2 flex flex-wrap gap-2">
+            <div className="mb-2 flex flex-wrap gap-1">
+              <ReactSortable 
+              list={images} 
+              className="flex flex-grap gap-1" 
+              setList={updateImagesOrder}>
               {!!images?.length && images?.map(link => (
                 <div key={link} className="h-24">
-                  <img src={link} className="rounded-lg" alt=""/>
+                  <img src={link} className="rounded-lg" alt=" "/>
                 </div>
               ))}
+              </ReactSortable>
+              {isUploading && (
+                <div className="h-24 p-1 bg-gray-200 flex items-center">
+                  <Spinner/>
+                </div>
+              )}
               <label className="w-24 h-24 text-center cursor-pointer flex items-center
                justify-center text-sm gap-1 text-gray-400 rounded-lg bg-gray-300">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">

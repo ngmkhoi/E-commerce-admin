@@ -7,7 +7,7 @@ const bucketName = `mkhoi-next-ecommerce`;
 
 export default async function handle(req,res) {
     const form = new multiParty.Form();
-    const {fields,files} = await new Promise((resolve,reject) => {
+    const {files} = await new Promise((resolve,reject) => {
         form.parse(req, async (err, fields, files) => {
             if (err) return reject(err)
             resolve({fields, files});

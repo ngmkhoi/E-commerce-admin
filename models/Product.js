@@ -1,10 +1,10 @@
 import mongoose, {model, Schema, models} from "mongoose";
 
-//Constructor
+//Constructor products
 const ProductSchema = new Schema({
   title: {type:String, required:true},
   description: String,
-  price: {type: Number, required: true},
+  price: {type: Number, required:true},
   images: [{type:String}],
 });
 
