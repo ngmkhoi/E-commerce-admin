@@ -1,6 +1,6 @@
 import axios from "axios";
 import {useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Spinner from "./Spinner";
 import { ReactSortable } from "react-sortablejs";
 
@@ -10,18 +10,26 @@ export default function ProductForm({
     description:existingDescription,
     price:existingPrice,
     images:existingImages,
+    category:assignedCategory,
 }){
     const [title, setTitle] = useState(existingTitle || '');
     const [description, setDescription] = useState(existingDescription || '');
     const [price, setPrice] = useState(existingPrice || '');
+    const [category, setCategory] = useState(assignedCategory || '');
     const [images, setImages] = useState(existingImages || []);
     const [goToProducts, setGoToProducts] = useState(false);
     const [isUploading, setIsUploading] = useState(false);
+    const [categories, setCategories] = useState([]);
     const router = useRouter();
+    useEffect(() => {
+      axios.get('/api/categories').then(result => {
+        setCategories(result.data);
+      })
+    },[]);
     async function saveProduct(ev) {
         ev.preventDefault();
         const data = {
-          title,description,price,images
+          title,description,price,images,category
         };
         if (_id) {
           //Edit sản phẩm dựa trên id được truyền vào
@@ -63,6 +71,16 @@ export default function ProductForm({
             <input type="text" placeholder="Nhập tên sản phẩm" 
             value={title} 
             onChange={ev => setTitle(ev.target.value)}/>
+
+            {/*Danh mục sản phẩm*/}
+            <label>Danh mục sản phẩm</label>
+            <select value={category}
+                onChange={ev => setCategory(ev.target.value)}>
+            <option value="">Chưa phân loại</option>
+            {categories.length > 0 && categories.map(c => (
+              <option key={c._id} value={c._id}>{c.name}</option>
+            ))}
+            </select>
 
             {/* Thêm ảnh sản phẩm */}
             <label>

@@ -52,5 +52,5 @@ table.basic a{
 }
 
 .btn-default {
-    @apply bg-green-600 text-white;
+    @apply bg-black text-white;
 }
