@@ -24,7 +24,14 @@ function Categories({swal}){
 
     async function saveCategory(ev){
         ev.preventDefault();
-        const data = {name,parentCategory};
+        const data = {
+            name,
+            parentCategory,
+            properties:properties.map(p=> ({
+                name:p.name,
+                value:p.value.split(',')
+            })),
+        };
         if(editedCategory){
             data._id = editedCategory._id;
             await axios.put('/api/categories', data)
@@ -135,7 +142,7 @@ function Categories({swal}){
                             placeholder="Giá trị sản phẩm"/>
                             <button 
                             onClick={() => removeProperty(index)}
-                            type="button"
+                            type="button" 
                             className="btn-default">
                                 Xoá
                             </button>
@@ -147,11 +154,14 @@ function Categories({swal}){
                     {editedCategory && (
                         <button 
                         type="button"
-                        onClick={() => setEditedCategory(null)
-                        
-                        }
-                        className="btn-default">
-                            Huỷ
+                        className="btn-default"
+                        onClick={() => {
+                        setEditedCategory(null);
+                        setName('');
+                        setParentCategory('');
+                        }}
+                        >
+                        Huỷ
                         </button>
                     )}
                     <button 
