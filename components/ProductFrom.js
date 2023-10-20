@@ -1,4 +1,4 @@
-import axios from "axios";
+ import axios from "axios";
 import {useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import Spinner from "./Spinner";
@@ -64,6 +64,15 @@ export default function ProductForm({
         setImages(images);
       }
 
+      const propertiesToFill=[];
+      if(categories.length >0 && category){
+        let catInfo = categories.find(({_id}) => _id === category);
+        propertiesToFill.push(...selCatInfo.properties);
+        while(catInfo?.parent?.id){
+          const parentCat= categories.find(({_id}) => _id ===catInfo?.parent?._id);
+          propertiesToFill.push(parentCat.properties)
+        }
+      }
     return(
             <form onSubmit={saveProduct}>
               {/* Nhập tên sản phẩm */}
@@ -81,7 +90,9 @@ export default function ProductForm({
               <option key={c._id} value={c._id}>{c.name}</option>
             ))}
             </select>
-
+            {propertiesToFill.length >0 && propertiesToFill.map(p =>(
+              <div>{p.name}</div>
+            ))}
             {/* Thêm ảnh sản phẩm */}
             <label>
               Ảnh sản phẩm
