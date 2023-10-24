@@ -15,6 +15,7 @@ export default function ProductForm({
     const [title, setTitle] = useState(existingTitle || '');
     const [description, setDescription] = useState(existingDescription || '');
     const [price, setPrice] = useState(existingPrice || '');
+    const [productProperty,setproductProperty]= useState({});
     const [category, setCategory] = useState(assignedCategory || '');
     const [images, setImages] = useState(existingImages || []);
     const [goToProducts, setGoToProducts] = useState(false);
@@ -63,14 +64,22 @@ export default function ProductForm({
       function updateImagesOrder(images){
         setImages(images);
       }
+      function setproductProp(propName,value){
+        setproductProperty(prev => {
+          const newProductProp={...prev};
+          newProductProp[propName] = value;
+          return newProductProp;
+        });
+      }
 
       const propertiesToFill=[];
-      if(categories.length >0 && category){
+      if(categories.length >0 && category) {
         let catInfo = categories.find(({_id}) => _id === category);
-        propertiesToFill.push(...selCatInfo.properties);
-        while(catInfo?.parent?.id){
+        propertiesToFill.push(...catInfo.properties);
+        while(catInfo?.parent?._id) {
           const parentCat= categories.find(({_id}) => _id ===catInfo?.parent?._id);
-          propertiesToFill.push(parentCat.properties)
+          propertiesToFill.push(...parentCat.properties);
+          catInfo=parentCat;
         }
       }
     return(
@@ -91,7 +100,14 @@ export default function ProductForm({
             ))}
             </select>
             {propertiesToFill.length >0 && propertiesToFill.map(p =>(
-              <div>{p.name}</div>
+              <div className="flex gap-1">
+                <div>{p.name}</div>
+                <select onChange={ev => setproductProp(p.name,ev.target.value)}>
+                  {p.value.map(v => (
+                    <option value={v}>{v}</option>
+                  ))}
+                </select>
+              </div>
             ))}
             {/* Thêm ảnh sản phẩm */}
             <label>
