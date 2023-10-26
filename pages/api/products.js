@@ -19,9 +19,9 @@ export default async function handle(req, res) {
 
     //Phương thức POST sản phẩm
     if(method === 'POST'){
-        const{title,description,price,images,category} = req.body;
+        const{title,description,price,images,category,properties} = req.body;
         const productDoc = await Product.create({
-            title,description,price,images,category
+            title,description,price,images,category,properties,
         })
         //trả dữ liệu sau khi nhập
         res.json(productDoc);
@@ -30,7 +30,7 @@ export default async function handle(req, res) {
     //Phương thức PUT
     if (method === 'PUT') {
         const {title,description,price,images,category,_id} = req.body;
-        await Product.updateOne({_id}, {title,description,price,images,category});
+        await Product.updateOne({_id}, {title,description,price,images,category,properties});
         res.json(true);
       }
 

@@ -15,7 +15,7 @@ export default function ProductForm({
     const [title, setTitle] = useState(existingTitle || '');
     const [description, setDescription] = useState(existingDescription || '');
     const [price, setPrice] = useState(existingPrice || '');
-    const [productProperty,setproductProperty]= useState({});
+    const [productProperties,setproductProperty]= useState({});
     const [category, setCategory] = useState(assignedCategory || '');
     const [images, setImages] = useState(existingImages || []);
     const [goToProducts, setGoToProducts] = useState(false);
@@ -102,7 +102,8 @@ export default function ProductForm({
             {propertiesToFill.length >0 && propertiesToFill.map(p =>(
               <div className="flex gap-1">
                 <div>{p.name}</div>
-                <select onChange={ev => setproductProp(p.name,ev.target.value)}>
+                <select value={productProperties} 
+                  onChange={ev => setproductProp(p.name,ev.target.value)}>
                   {p.value.map(v => (
                     <option value={v}>{v}</option>
                   ))}
