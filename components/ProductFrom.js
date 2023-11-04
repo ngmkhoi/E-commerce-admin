@@ -145,7 +145,7 @@ export default function ProductForm({
             <input type="file" onChange={uploadImages} className="hidden"/>
           </label>
         </div>
-        <label>Description</label>
+        <label>Mô tả</label>
         <textarea
           placeholder="description"
           value={description}
@@ -160,7 +160,7 @@ export default function ProductForm({
         <button
           type="submit"
           className="btn-primary">
-          Save
+          Lưu
         </button>
       </form>
   );
